@@ -250,6 +250,68 @@
       padding-left: 1rem;
     }
 
+    /* MOBILE OPTIMIZATION (Foco em Zero Clipping) */
+    @media (max-width: 768px) {
+
+      body,
+      html {
+        overflow-x: hidden;
+      }
+
+      #hero {
+        padding: 80px 5% 4rem;
+        /* Margens de 5% para segurança */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+      }
+
+      .hero-h1 {
+        font-size: clamp(1.4rem, 8vw, 2.2rem) !important;
+        /* Fonte menor para caber em telas 320px-375px */
+        line-height: 1.1;
+        margin-bottom: 1.2rem;
+        letter-spacing: -0.02em;
+        width: 100%;
+        word-break: break-word;
+      }
+
+      .hero-sub {
+        font-size: 0.7rem;
+        max-width: 100%;
+        margin-bottom: 2rem;
+        padding-left: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .hero-badge {
+        margin-bottom: 1rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.55rem;
+      }
+
+      .hero-btns {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn-primary {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+
+      .port-h2 {
+        font-size: 2rem;
+      }
+
+      .scroll-ind {
+        display: none;
+      }
+    }
+
     .hero-btns {
       display: flex;
       gap: 1rem;
@@ -1001,21 +1063,24 @@
 
         // 2. Motor de Scroll Ultra-Imersivo
         function setupScrollEffects() {
+          const isMobile = window.innerWidth <= 768;
+          const endScale = isMobile ? 2.2 : 4; // Zoom reduzido no mobile para maior fluidez
+
           const heroST = gsap.timeline({
             scrollTrigger: {
               trigger: "#hero",
               start: "top top",
-              end: "+=150%", // Profundidade ideal
+              end: isMobile ? "+=110%" : "+=150%",
               pin: true,
               pinType: window.innerWidth > 768 ? "fixed" : "transform",
-              scrub: 1.2, // Scrub mais suave e luxuoso
+              scrub: 1.2,
               invalidateOnRefresh: true,
               anticipatePin: 1
             }
           });
 
           // Zoom 'Portal' — atravessando o texto e garantindo retorno
-          heroST.fromTo(".hero-h1", { scale: 1, opacity: 1, y: 0 }, { scale: 4, opacity: 0, y: -100, ease: "none", immediateRender: false }, 0)
+          heroST.fromTo(".hero-h1", { scale: 1, opacity: 1, y: 0 }, { scale: endScale, opacity: 0, y: -100, ease: "none", immediateRender: false }, 0)
             .fromTo(".hero-sub", { opacity: 1, y: 0 }, { opacity: 0, y: 50, ease: "none", immediateRender: false }, 0)
             .fromTo(".hero-badge", { opacity: 1, y: 0 }, { opacity: 0, y: -100, ease: "none", immediateRender: false }, 0)
             .fromTo(".hero-btns", { opacity: 1, scale: 1, y: 0 }, { opacity: 0, scale: 0.9, y: 50, ease: "none", immediateRender: false }, 0)
